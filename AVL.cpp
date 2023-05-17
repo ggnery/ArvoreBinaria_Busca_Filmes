@@ -247,60 +247,52 @@ No* encontraMaior(No* raiz){
  * @param arvore 
  * @return No* 
  */
-No* removeNo(int dado, No* raiz, BST* arvore){
-    if(raiz == NULL){
+No* removeNo(int dado, No* raiz, BST* arvore) {
+    if (raiz == NULL) {
+        printf("O elemento nao existe na arvore\n");
         return NULL;
     }
-    
-    if(raiz->dado == dado){
-        //Remove no folha
-        if(raiz->direita == NULL && raiz->esquerda ==NULL){        
+
+    if (raiz->dado == dado) {
+        if (raiz->direita == NULL && raiz->esquerda == NULL) {
             free(raiz);
             arvore->tamanho--;
             return NULL;
-        }else{
-            
-            
-            //Remove no com 1 filho
-            if(raiz->esquerda == NULL || raiz->direita == NULL){
-                No* aux;
-                if(raiz->esquerda == NULL){
-                    aux = raiz->direita;
-                }else{
-                    aux = raiz->esquerda;
-                }
-                free(raiz);
-                arvore->tamanho--;
-                return aux;
-
-            //Remove no com 2 filhos
-            }else{
-                No* aux = encontraMaior(raiz->esquerda);
-                raiz->dado = aux->dado;
-                aux->dado = dado;
-                raiz->esquerda = removeNo(dado, raiz->esquerda,  arvore);
-                return raiz;
+        }
+        else if (raiz->esquerda == NULL || raiz->direita == NULL) {
+            No* aux;
+            if (raiz->esquerda == NULL) {
+                aux = raiz->direita;
             }
+            else {
+                aux = raiz->esquerda;
+            }
+            free(raiz);
+            arvore->tamanho--;
+            return aux;
         }
-    }else{
-        //Percorre a arvore ate achar o no
-
-        if(dado < raiz->dado){
-            raiz->esquerda = removeNo(dado ,raiz->esquerda, arvore);
-        }else{
-            raiz->direita = removeNo(dado ,raiz->direita, arvore);
+        else {
+            No* aux = encontraMaior(raiz->esquerda);
+            raiz->dado = aux->dado;
+            raiz->esquerda = removeNo(aux->dado, raiz->esquerda, arvore);
+            raiz->altura = maior(alturaNo(raiz->esquerda), alturaNo(raiz->direita)) + 1;
+            raiz = balancear(raiz);
+            return raiz;
         }
+    }
+    else if (dado < raiz->dado) {
+        raiz->esquerda = removeNo(dado, raiz->esquerda, arvore);
+    }
+    else {
+        raiz->direita = removeNo(dado, raiz->direita, arvore);
+    }
 
-        //Recalcula a altura de todos os nos entre a raiz e o no inserido 
-        raiz->altura = maior(alturaNo(raiz->esquerda), alturaNo(raiz->direita))+1;
-        //Balanceia a sub-arvore
-        raiz = balancear(raiz);
-
-        //Retorna o proprio no para alterar os nos da arvore na recursao
-        return raiz;    
-             
-    }  
+    raiz->altura = maior(alturaNo(raiz->esquerda), alturaNo(raiz->direita)) + 1;
+    raiz = balancear(raiz);
+    return raiz;
 }
+
+
 
 /**
  * @brief Encontra a altura total da arvore
@@ -335,6 +327,12 @@ void liberaArvore(No* raiz){
     }
 }
 
+/**
+ * @brief Imprime a arvore
+ * 
+ * @param raiz 
+ * @param nivel 
+ */
 void imprimir(No* raiz, int nivel){
     int i;
     if(raiz != NULL){
@@ -348,6 +346,44 @@ void imprimir(No* raiz, int nivel){
         imprimir(raiz->esquerda, nivel +1);  
     }
 }
+
+/**
+ * @brief Cria um arquivo txt que representa a arvore e vai ser lido pelo graphviz
+ * 
+ * @param arvore 
+ */
+void gerarGrafo(BST* arvore) {
+    FILE* file = fopen("tree.dot", "w");
+
+    fprintf(file, "digraph BST {\n");
+    fprintf(file, "    node [shape=circle];\n");
+
+    queue<No*> nodeQueue;
+    nodeQueue.push(arvore->raiz);
+
+    while (!nodeQueue.empty()) {
+        No* current = nodeQueue.front();
+        nodeQueue.pop();
+
+        fprintf(file, "    %d;\n", current->dado);
+
+        if (current->esquerda != NULL) {
+            fprintf(file, "    %d -> %d;\n", current->dado, current->esquerda->dado);
+            nodeQueue.push(current->esquerda);
+        }
+
+        if (current->direita != NULL) {
+            fprintf(file, "    %d -> %d;\n", current->dado, current->direita->dado);
+            nodeQueue.push(current->direita);
+        }
+    }
+
+    fprintf(file, "}\n");
+
+    fclose(file);
+}
+
+
 
 int main(){
     BST* arvore = criaArvore();
@@ -388,10 +424,11 @@ int main(){
         printf("\n");
     }while(op != 4);
     
+    gerarGrafo(arvore);
+
     liberaArvore(arvore->raiz);
     free(arvore);
     
     return 0;
     
 }
-
