@@ -374,18 +374,18 @@ void gerarGrafo(const BST* arvore) {
         nodeQueue.pop();
 
         // Adiciona espaços antes e depois do nome do filme
-        string label = "\"" + current->filme.nome + "\"";
+        string label = "\"" + to_string(current->filme.id) + " : "+current->filme.nome + "\"";
 
         file << "    " << label << ";" << endl;
 
         if (current->esquerda != nullptr) {
-            string leftLabel = "\"" + current->esquerda->filme.nome + "\"";
+            string leftLabel = "\"" + to_string(current->esquerda->filme.id) + " : " +current->esquerda->filme.nome + "\"";
             file << "    " << label << " -> " << leftLabel << ";" << endl;
             nodeQueue.push(current->esquerda);
         }
 
         if (current->direita != nullptr) {
-            string rightLabel = "\"" + current->direita->filme.nome + "\"";
+            string rightLabel = "\"" + to_string(current->direita->filme.id) +" : "+current->direita->filme.nome + "\"";
             file << "    " << label << " -> " << rightLabel << ";" << endl;
             nodeQueue.push(current->direita);
         }
