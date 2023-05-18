@@ -5,6 +5,7 @@
 using namespace std;
 
 typedef struct filme {
+    int id;
     string nome;
     string linguagem;
     string popularidade;
@@ -43,6 +44,7 @@ BST* criaArvore(){
 No* criaNo(Filme filme){
     No* n = new No;
     if(n == nullptr) exit(1);
+
     n->filme = filme;
     n->altura = 0;
     n->direita = nullptr;
@@ -200,9 +202,9 @@ No* insereArvore(Filme filme, No* raiz, BST* arvore){
         return criaNo(filme);       
     }
 
-    if(filme.nome < raiz->filme.nome){
+    if(filme.id < raiz->filme.id){
         raiz->esquerda = insereArvore(filme, raiz->esquerda, arvore);
-    }else if(filme.nome > raiz->filme.nome){
+    }else if(filme.id > raiz->filme.id){
         raiz->direita = insereArvore(filme, raiz->direita, arvore);
     }else{
         printf("O elemento ja existe\n");
@@ -259,7 +261,7 @@ No* removeNo(Filme filme, No* raiz, BST* arvore) {
         return nullptr;
     }
 
-    if (raiz->filme.nome == filme.nome) {
+    if (raiz->filme.id == filme.id) {
         if (raiz->direita == nullptr && raiz->esquerda == nullptr) {
             free(raiz);
             arvore->tamanho--;
@@ -286,7 +288,7 @@ No* removeNo(Filme filme, No* raiz, BST* arvore) {
             return raiz;
         }
     }
-    else if (filme.nome < raiz->filme.nome) {
+    else if (filme.id < raiz->filme.id) {
         raiz->esquerda = removeNo(filme, raiz->esquerda, arvore);
     }
     else {
@@ -411,6 +413,8 @@ int main(){
 
     while (n--) {
         Filme filme;
+        cin>>filme.id;
+        cin.ignore();
         getline(cin, filme.nome);
         getline(cin, filme.linguagem);
         getline(cin, filme.popularidade);
@@ -419,6 +423,7 @@ int main(){
         arvore->raiz = insereArvore(filme, arvore->raiz, arvore);
         
     }
+    
     gerarGrafo(arvore);
     //imprimir(arvore->raiz, 1);
     liberaArvore(arvore->raiz);
