@@ -1,0 +1,24 @@
+digraph BST {
+    node [shape=circle];
+    "Elvis";
+    "Elvis" -> "Jurassic World Dominion";
+    "Elvis" -> "Day Shift";
+    "Jurassic World Dominion";
+    "Jurassic World Dominion" -> "Minions: The Rise of Gru";
+    "Jurassic World Dominion" -> "Luck";
+    "Day Shift";
+    "Day Shift" -> "Thor: Love and Thunder";
+    "Day Shift" -> "Prey";
+    "Minions: The Rise of Gru";
+    "Minions: The Rise of Gru" -> "Top Gun: Maverick";
+    "Luck";
+    "Thor: Love and Thunder";
+    "Thor: Love and Thunder" -> "Lightyear";
+    "Prey";
+    "Prey" -> "Orphan: First Kill";
+    "Prey" -> "The Next 365 Days";
+    "Top Gun: Maverick";
+    "Lightyear";
+    "Orphan: First Kill";
+    "The Next 365 Days";
+}

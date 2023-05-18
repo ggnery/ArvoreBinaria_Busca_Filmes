@@ -413,9 +413,9 @@ int main(){
 
     while (n--) {
         Filme filme;
+        getline(cin, filme.nome);
         cin>>filme.id;
         cin.ignore();
-        getline(cin, filme.nome);
         getline(cin, filme.linguagem);
         getline(cin, filme.popularidade);
         getline(cin, filme.lancamento);
