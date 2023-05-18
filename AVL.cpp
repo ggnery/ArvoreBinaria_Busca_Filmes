@@ -2,12 +2,16 @@
 #include <cstdlib>
 #include <string>
 #include <queue>
-
+#include <iostream>
 using namespace std;
+
+typedef struct filme {
+    string nome, linguagem, popularidade, lancamento, descricao;
+} Filme;
 
 //Representa um no da arvore
 typedef struct no{
-    int dado;
+    Filme filme;
     int altura;
     struct no* direita;
     struct no* esquerda;
@@ -21,9 +25,8 @@ typedef struct bst{
 //Representa a arvore
 BST* criaArvore(){
     BST* p = (BST*) malloc(sizeof(BST));
-    p->raiz = NULL; 
+    p->raiz = nullptr; 
     p->tamanho = 0;
-
     return p;
 }
 
@@ -33,14 +36,17 @@ BST* criaArvore(){
  * @param dado 
  * @return No* 
  */
-No* criaNo(int dado){
+No* criaNo(Filme filme){
     No* n = (No*) malloc(sizeof(No));
-    if(n == NULL) exit(1);
-    n->dado = dado;
+    if(n == nullptr) exit(1);
+    n->filme.nome = filme.nome;
+    n->filme.popularidade = filme.popularidade;
+    n->filme.linguagem = filme.linguagem;
+    n->filme.descricao = filme.descricao;
+    n->filme.lancamento = filme.lancamento;
     n->altura = 0;
-    n->direita = NULL;
-    n->esquerda = NULL;
-
+    n->direita = nullptr;
+    n->esquerda = nullptr;
 
     return n;
 }
@@ -63,7 +69,7 @@ int maior(int a, int b){
  * @return int 
  */
 int alturaNo(No* no){
-    if(no == NULL){
+    if(no == nullptr){
         return -1;
     }else{
         return no->altura;
@@ -77,7 +83,7 @@ int alturaNo(No* no){
  * @return int 
  */
 int fatorBalanceamento(No *no){
-    if(no != NULL){
+    if(no != nullptr){
         return alturaNo(no->esquerda) - alturaNo(no->direita);
     }else{
         return 0;
@@ -188,16 +194,16 @@ No* balancear(No* raiz){
  * @param arvore 
  * @return No* 
  */
-No* insereArvore(int dado, No* raiz, BST* arvore){
-    if(raiz == NULL){
+No* insereArvore(Filme filme, No* raiz, BST* arvore){
+    if(raiz == nullptr){
         arvore->tamanho++;
-        return criaNo(dado);       
+        return criaNo(filme);       
     }
 
-    if(dado < raiz->dado){
-        raiz->esquerda = insereArvore(dado, raiz->esquerda, arvore);
-    }else if(dado > raiz->dado){
-        raiz->direita = insereArvore(dado, raiz->direita, arvore);
+    if(filme.nome < raiz->filme.nome){
+        raiz->esquerda = insereArvore(filme, raiz->esquerda, arvore);
+    }else if(filme.nome > raiz->filme.nome){
+        raiz->direita = insereArvore(filme, raiz->direita, arvore);
     }else{
         printf("O elemento ja existe\n");
     }
@@ -219,7 +225,7 @@ No* insereArvore(int dado, No* raiz, BST* arvore){
  */
 No* encontraMenor(No* raiz){
     No* aux = raiz;
-    while(aux != NULL && aux->esquerda!=NULL){
+    while(aux != nullptr && aux->esquerda!=nullptr){
         aux = aux->esquerda;
     }
     return aux;
@@ -233,7 +239,7 @@ No* encontraMenor(No* raiz){
  */
 No* encontraMaior(No* raiz){
     No* aux = raiz;
-    while(aux != NULL && aux->direita!=NULL){
+    while(aux != nullptr && aux->direita!=nullptr){
         aux = aux->direita;
     }
     return aux;
@@ -247,21 +253,21 @@ No* encontraMaior(No* raiz){
  * @param arvore 
  * @return No* 
  */
-No* removeNo(int dado, No* raiz, BST* arvore) {
-    if (raiz == NULL) {
+No* removeNo(Filme filme, No* raiz, BST* arvore) {
+    if (raiz == nullptr) {
         printf("O elemento nao existe na arvore\n");
-        return NULL;
+        return nullptr;
     }
 
-    if (raiz->dado == dado) {
-        if (raiz->direita == NULL && raiz->esquerda == NULL) {
+    if (raiz->filme.nome == filme.nome) {
+        if (raiz->direita == nullptr && raiz->esquerda == nullptr) {
             free(raiz);
             arvore->tamanho--;
-            return NULL;
+            return nullptr;
         }
-        else if (raiz->esquerda == NULL || raiz->direita == NULL) {
+        else if (raiz->esquerda == nullptr || raiz->direita == nullptr) {
             No* aux;
-            if (raiz->esquerda == NULL) {
+            if (raiz->esquerda == nullptr) {
                 aux = raiz->direita;
             }
             else {
@@ -273,18 +279,18 @@ No* removeNo(int dado, No* raiz, BST* arvore) {
         }
         else {
             No* aux = encontraMaior(raiz->esquerda);
-            raiz->dado = aux->dado;
-            raiz->esquerda = removeNo(aux->dado, raiz->esquerda, arvore);
+            raiz->filme = aux->filme;
+            raiz->esquerda = removeNo(aux->filme, raiz->esquerda, arvore);
             raiz->altura = maior(alturaNo(raiz->esquerda), alturaNo(raiz->direita)) + 1;
             raiz = balancear(raiz);
             return raiz;
         }
     }
-    else if (dado < raiz->dado) {
-        raiz->esquerda = removeNo(dado, raiz->esquerda, arvore);
+    else if (filme.nome < raiz->filme.nome) {
+        raiz->esquerda = removeNo(filme, raiz->esquerda, arvore);
     }
     else {
-        raiz->direita = removeNo(dado, raiz->direita, arvore);
+        raiz->direita = removeNo(filme, raiz->direita, arvore);
     }
 
     raiz->altura = maior(alturaNo(raiz->esquerda), alturaNo(raiz->direita)) + 1;
@@ -301,7 +307,7 @@ No* removeNo(int dado, No* raiz, BST* arvore) {
  * @return int 
  */
 int alturaArvore(No* raiz){
-    if(raiz == NULL){
+    if(raiz == nullptr){
         return -1;
     }else{
         int esq = alturaArvore(raiz->esquerda);
@@ -320,7 +326,7 @@ int alturaArvore(No* raiz){
  * @param raiz 
  */
 void liberaArvore(No* raiz){
-    if(raiz != NULL){
+    if(raiz != nullptr){
         liberaArvore(raiz->esquerda);
         liberaArvore(raiz->direita);
         free(raiz);
@@ -335,14 +341,14 @@ void liberaArvore(No* raiz){
  */
 void imprimir(No* raiz, int nivel){
     int i;
-    if(raiz != NULL){
+    if(raiz != nullptr){
         imprimir(raiz->direita, nivel+1);
         printf("\n\n");
 
         for(i=0; i<nivel; i++)
             printf("\t");
 
-        printf("%d", raiz->dado);
+        printf("%s", raiz->filme);
         imprimir(raiz->esquerda, nivel +1);  
     }
 }
@@ -365,15 +371,15 @@ void gerarGrafo(BST* arvore) {
         No* current = nodeQueue.front();
         nodeQueue.pop();
 
-        fprintf(file, "    %d;\n", current->dado);
+        fprintf(file, "    %s;\n", current->filme.nome);
 
-        if (current->esquerda != NULL) {
-            fprintf(file, "    %d -> %d;\n", current->dado, current->esquerda->dado);
+        if (current->esquerda != nullptr) {
+            fprintf(file, "    %s -> %s;\n", current->filme.nome, current->esquerda->filme.nome);
             nodeQueue.push(current->esquerda);
         }
 
-        if (current->direita != NULL) {
-            fprintf(file, "    %d -> %d;\n", current->dado, current->direita->dado);
+        if (current->direita != nullptr) {
+            fprintf(file, "    %s -> %s;\n", current->filme.nome, current->direita->filme.nome);
             nodeQueue.push(current->direita);
         }
     }
@@ -386,46 +392,29 @@ void gerarGrafo(BST* arvore) {
 
 
 int main(){
+    
+    int n;
+    cin >> n;
+    cin.ignore();
+    string nome, linguagem, popularidade, lancamento, descricao;
+    
     BST* arvore = criaArvore();
-    int op;
-    
-    do{
-        
-        printf("Digite a opercao desejada:\n");
-        printf("1- Inserir arvore\n");
-        printf("2- Remover arvore\n");
-        printf("3- Printar arvore\n");
-        printf("4- Encerrar programa\n");
-        scanf("%d", &op);
-        
-        switch (op){
-            case 1:{
-                int n;
-                printf("Digite um inteiro: \n");
-                scanf("%d", &n);
-                arvore->raiz = insereArvore(n,arvore->raiz, arvore);
-                break;
-            }
-            case 2:{
-                int n;
-                printf("Digite um inteiro: \n");
-                scanf("%d", &n);
-                arvore->raiz = removeNo(n,arvore->raiz, arvore);
-                
-                break;
-            } 
-            case 3:{
-                
-                imprimir(arvore->raiz, 1);
-                break;
-            } 
-        }
 
-        printf("\n");
-    }while(op != 4);
-    
-    gerarGrafo(arvore);
+    while (n--) {
+        getline(cin, nome);
+        getline(cin, linguagem);
+        getline(cin, popularidade);
+        getline(cin, lancamento);
+        getline(cin, descricao);
+        arvore->raiz = insereArvore({nome, linguagem, popularidade, lancamento, descricao}, arvore->raiz, arvore);
+        nome.clear();
+        linguagem.clear();
+        popularidade.clear();
+        lancamento.clear();
+        descricao.clear();
+    }
 
+    imprimir(arvore->raiz, 1);
     liberaArvore(arvore->raiz);
     free(arvore);
     
