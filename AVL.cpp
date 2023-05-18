@@ -1,12 +1,15 @@
-#include <cstdio>
-#include <cstdlib>
+#include <fstream> 
 #include <string>
 #include <queue>
 #include <iostream>
 using namespace std;
 
 typedef struct filme {
-    string nome, linguagem, popularidade, lancamento, descricao;
+    string nome;
+    string linguagem;
+    string popularidade;
+    string lancamento;
+    string descricao;
 } Filme;
 
 //Representa um no da arvore
@@ -24,7 +27,8 @@ typedef struct bst{
 
 //Representa a arvore
 BST* criaArvore(){
-    BST* p = (BST*) malloc(sizeof(BST));
+    BST* p = new BST;
+    if(p == nullptr) exit(1);
     p->raiz = nullptr; 
     p->tamanho = 0;
     return p;
@@ -37,13 +41,9 @@ BST* criaArvore(){
  * @return No* 
  */
 No* criaNo(Filme filme){
-    No* n = (No*) malloc(sizeof(No));
+    No* n = new No;
     if(n == nullptr) exit(1);
-    n->filme.nome = filme.nome;
-    n->filme.popularidade = filme.popularidade;
-    n->filme.linguagem = filme.linguagem;
-    n->filme.descricao = filme.descricao;
-    n->filme.lancamento = filme.lancamento;
+    n->filme = filme;
     n->altura = 0;
     n->direita = nullptr;
     n->esquerda = nullptr;
@@ -329,7 +329,7 @@ void liberaArvore(No* raiz){
     if(raiz != nullptr){
         liberaArvore(raiz->esquerda);
         liberaArvore(raiz->direita);
-        free(raiz);
+        delete raiz;
     }
 }
 
@@ -343,12 +343,12 @@ void imprimir(No* raiz, int nivel){
     int i;
     if(raiz != nullptr){
         imprimir(raiz->direita, nivel+1);
-        printf("\n\n");
+        cout<<"\n\n";
 
         for(i=0; i<nivel; i++)
-            printf("\t");
+            cout<<"\t";
 
-        printf("%s", raiz->filme);
+        cout << raiz->filme.nome;
         imprimir(raiz->esquerda, nivel +1);  
     }
 }
@@ -358,11 +358,11 @@ void imprimir(No* raiz, int nivel){
  * 
  * @param arvore 
  */
-void gerarGrafo(BST* arvore) {
-    FILE* file = fopen("tree.dot", "w");
+void gerarGrafo(const BST* arvore) {
+    ofstream file("tree.dot");
 
-    fprintf(file, "digraph BST {\n");
-    fprintf(file, "    node [shape=circle];\n");
+    file << "digraph BST {" << endl;
+    file << "    node [shape=circle];" << endl;
 
     queue<No*> nodeQueue;
     nodeQueue.push(arvore->raiz);
@@ -371,23 +371,33 @@ void gerarGrafo(BST* arvore) {
         No* current = nodeQueue.front();
         nodeQueue.pop();
 
-        fprintf(file, "    %s;\n", current->filme.nome);
+        // Adiciona espaços antes e depois do nome do filme
+        string label = "\"" + current->filme.nome + "\"";
+
+        file << "    " << label << ";" << endl;
 
         if (current->esquerda != nullptr) {
-            fprintf(file, "    %s -> %s;\n", current->filme.nome, current->esquerda->filme.nome);
+            string leftLabel = "\"" + current->esquerda->filme.nome + "\"";
+            file << "    " << label << " -> " << leftLabel << ";" << endl;
             nodeQueue.push(current->esquerda);
         }
 
         if (current->direita != nullptr) {
-            fprintf(file, "    %s -> %s;\n", current->filme.nome, current->direita->filme.nome);
+            string rightLabel = "\"" + current->direita->filme.nome + "\"";
+            file << "    " << label << " -> " << rightLabel << ";" << endl;
             nodeQueue.push(current->direita);
         }
     }
 
-    fprintf(file, "}\n");
+    file << "}" << endl;
 
-    fclose(file);
+    file.close();
+
+    // Comando para gerar a imagem usando o Graphviz
+    system("dot -Tpng tree.dot -o tree.png");
 }
+
+
 
 
 
@@ -396,27 +406,23 @@ int main(){
     int n;
     cin >> n;
     cin.ignore();
-    string nome, linguagem, popularidade, lancamento, descricao;
     
     BST* arvore = criaArvore();
 
     while (n--) {
-        getline(cin, nome);
-        getline(cin, linguagem);
-        getline(cin, popularidade);
-        getline(cin, lancamento);
-        getline(cin, descricao);
-        arvore->raiz = insereArvore({nome, linguagem, popularidade, lancamento, descricao}, arvore->raiz, arvore);
-        nome.clear();
-        linguagem.clear();
-        popularidade.clear();
-        lancamento.clear();
-        descricao.clear();
+        Filme filme;
+        getline(cin, filme.nome);
+        getline(cin, filme.linguagem);
+        getline(cin, filme.popularidade);
+        getline(cin, filme.lancamento);
+        getline(cin, filme.descricao);
+        arvore->raiz = insereArvore(filme, arvore->raiz, arvore);
+        
     }
-
-    imprimir(arvore->raiz, 1);
+    gerarGrafo(arvore);
+    //imprimir(arvore->raiz, 1);
     liberaArvore(arvore->raiz);
-    free(arvore);
+    delete arvore;
     
     return 0;
     
