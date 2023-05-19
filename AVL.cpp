@@ -28,6 +28,27 @@ typedef struct bst{
     int tamanho;
 }BST;
 
+BST* criaArvore();
+No* criaNo(Filme filme);
+int maior(int a, int b);
+int alturaNo(No* no);
+int fatorBalanceamento(No *no);
+No* rotacionarEsquerda(No* raiz);
+No* rotacionarDireita(No* raiz);
+No* rotacionarDireitaEsquerda(No* raiz);
+No* rotacionarEsquerdaDireita(No* raiz);
+No* balancear(No* raiz);
+No* insereArvore(Filme filme, No* raiz, BST* arvore);
+No* encontraMenor(No* raiz);
+No* encontraMaior(No* raiz);
+No* removeNo(int id, No* raiz, BST* arvore);
+int alturaArvore(No* raiz);
+void liberaArvore(No* raiz);
+No* procuraNo(No* raiz, int id);
+void gerarGrafo(const BST* arvore);
+void leDados(BST* arvore, string arquivoTXT);
+void escreverFilmeEmArquivo(No* no);
+
 //Representa a arvore
 BST* criaArvore(){
     BST* p = new BST;
@@ -451,7 +472,7 @@ int main() {
     
     BST* arvore = criaArvore();
     
-    leDados(arvore, "teste.txt");
+    leDados(arvore, "dados.txt");
     gerarGrafo(arvore);
 
     while(true){ 
