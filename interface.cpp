@@ -6,7 +6,7 @@
     #define SO 2
 #endif
 
-#define QTD_FUNCOES 4
+#define QTD_FUNCOES 5
 
 typedef void (*FuncaoPtr)(BST*);
 
@@ -15,13 +15,15 @@ static void sair(BST* AV);
 static void buscarFilme(BST* AV);
 static void informarAtributos(BST* AV);
 static void visualisarGrafo(BST* AV);
+static void removerFilme(BST* AV);
 static void clear();
 
 FuncaoPtr F[] = {
     &sair,
     &buscarFilme,
     &informarAtributos,
-    &visualisarGrafo
+    &visualisarGrafo,
+    &removerFilme
 };
 
 //         cout<<"1 - Remover filme"<<endl;
@@ -35,6 +37,7 @@ string home =
         "1 - Buscar filme.\n"
         "2 - Informar atributos da arvore.\n"
         "3 - Visualisar grafo.\n"
+        "4 - Remover filme.\n"
         "0 - Sair.\n"
         ">> ";
 
@@ -94,6 +97,19 @@ void visualisarGrafo(BST* AV){
     gerarGrafo(AV);
     cout << "Um tree.svg foi criado.\n\n";
     //system("tree.svg");
+}
+
+void removerFilme(BST* AV){
+    int entrada;
+    No* filme;
+    cout << "Qual o id do filme?\n>> ";
+    cin >> entrada;
+    filme = procuraNo(AV->raiz, entrada);
+    if(filme == NULL) cout << "Filme nao encontrado.\n" <<endl;
+    else {
+        AV->raiz = removeNo(entrada, AV->raiz, AV);
+        cout << "Filme removido." <<endl;
+    }
 }
 
 static void clear(){

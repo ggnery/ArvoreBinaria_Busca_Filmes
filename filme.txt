@@ -1,6 +1,6 @@
-Nome: Beverly Hills Cop
-Id: 90
-Data de lançamento: 1984-11-30
+Nome: American Beauty
+Id: 14
+Data de lançamento: 1999-09-15
 Língua: en
-Popularidade: 26.662
-Descrição: The heat is on in this fast paced action-comedy starring Eddie Murphy as Axel Foley, a street smart Detroit cop tracking down his best friend's killer in Beverly Hills. Axel quickly learns that his wild style doesn't fit in with the Beverly Hills Police Department, which assigns two officers to make sure things don't get out of hand. Dragging the stuffy detectives along for the ride, Axel smashes through a huge culture clash in his hilarious, high-speed pursuit of justice. Featuring cameos by Paul Reiser, Bronson Pinchot and Damon Wayans, Beverly Hills Cop is an exhilarating, sidesplitting adventure.
+Popularidade: 38.278
+Descrição: Lester Burnham, a depressed suburban father in a mid-life crisis, decides to turn his hectic life around after developing an infatuation with his daughter's attractive friend.
