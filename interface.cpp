@@ -26,12 +26,6 @@ FuncaoPtr F[] = {
     &removerFilme
 };
 
-//         cout<<"1 - Remover filme"<<endl;
-//         cout<<"2 - Buscar filme"<<endl;
-//         cout<<"3 - Tamanho da arvore"<<endl;
-//         cout<< "4 - Altura arvore" <<endl;
-//         cout<<"5- sair" <<endl;
-
 string home = 
         "Escolha uma acao: \n"
         "1 - Buscar filme.\n"
@@ -96,7 +90,7 @@ void informarAtributos(BST* AV){
 void visualisarGrafo(BST* AV){
     gerarGrafo(AV);
     cout << "Um tree.svg foi criado.\n\n";
-    //system("tree.svg");
+    system("tree.svg");
 }
 
 void removerFilme(BST* AV){
