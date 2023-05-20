@@ -1,58 +1,8 @@
-#include <fstream> 
-#include <string>
-#include <queue>
-#include <iostream>
-#include <limits>
-
-using namespace std;
-
-typedef struct filme {
-    int id;
-    string nome;
-    string linguagem;
-    string popularidade;
-    string lancamento;
-    string descricao;
-} Filme;
-
-//Representa um no da arvore
-typedef struct no{
-    Filme filme;
-    int altura;
-    struct no* direita;
-    struct no* esquerda;
-}No;
-
-typedef struct bst{
-    No* raiz;
-    int tamanho;
-}BST;
-
-BST* criaArvore();
-No* criaNo(Filme filme);
-int maior(int a, int b);
-int alturaNo(No* no);
-int fatorBalanceamento(No *no);
-No* rotacionarEsquerda(No* raiz);
-No* rotacionarDireita(No* raiz);
-No* rotacionarDireitaEsquerda(No* raiz);
-No* rotacionarEsquerdaDireita(No* raiz);
-No* balancear(No* raiz);
-No* insereArvore(Filme filme, No* raiz, BST* arvore);
-No* encontraMenor(No* raiz);
-No* encontraMaior(No* raiz);
-No* removeNo(int id, No* raiz, BST* arvore);
-int alturaArvore(No* raiz);
-void liberaArvore(No* raiz);
-No* procuraNo(No* raiz, int id);
-void gerarGrafo(const BST* arvore);
-void leDados(BST* arvore, string arquivoTXT);
-void escreverFilmeEmArquivo(No* no);
+#include "AVL.h"
 
 //Representa a arvore
 BST* criaArvore(){
     BST* p = new BST;
-    
     p->raiz = nullptr; 
     p->tamanho = 0;
     return p;
@@ -66,12 +16,10 @@ BST* criaArvore(){
  */
 No* criaNo(Filme filme){
     No* n = new No;
-
     n->filme = filme;
     n->altura = 0;
     n->direita = nullptr;
     n->esquerda = nullptr;
-
     return n;
 }
 
@@ -320,8 +268,6 @@ No* removeNo(int id, No* raiz, BST* arvore) {
     return raiz;
 }
 
-
-
 /**
  * @brief Encontra a altura total da arvore
  * 
@@ -394,7 +340,6 @@ void gerarGrafo(const BST* arvore) {
     while (!nodeQueue.empty()) {
         No* current = nodeQueue.front();
         nodeQueue.pop();
-
         // Adiciona espaços antes e depois do nome do filme
         string label = "\"" + to_string(current->filme.id) + ": "+current->filme.nome + "\"";
 
@@ -463,76 +408,5 @@ void escreverFilmeEmArquivo(No* no) {
     } else {
         cout << "Erro ao abrir o arquivo." << endl;
     }
-
     arquivo.close();
 }
-
-
-int main() {
-    
-    BST* arvore = criaArvore();
-    
-    leDados(arvore, "dados.txt");
-    gerarGrafo(arvore);
-
-    while(true){ 
-        int op;
-        cout<<"1 - Remover filme"<<endl;
-        cout<<"2 - Buscar filme"<<endl;
-        cout<<"3 - Tamanho da arvore"<<endl;
-        cout<< "4 - Altura arvore" <<endl;
-        cout<<"5- sair" <<endl;
-        cin>>op;
-
-        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        
-        if(op == 1){
-            int id;
-            cout<<"Digite o id a ser removido: ";
-            cin>>id;
-            //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            
-            arvore->raiz = removeNo(id, arvore->raiz, arvore);
-            gerarGrafo(arvore);
-
-        }
-        if(op == 2){
-            int id;
-            cout << "Digite o id a ser procurado: ";
-            cin >> id;
-            
-
-            No* no = procuraNo(arvore->raiz, id);
-            if (no != nullptr) {
-                escreverFilmeEmArquivo(no);
-            } else {
-                cout << "Elemento nao encontrado" << endl;
-            }
-            
-            
-        }
-        if(op == 3){
-            cout<< "O tamanho da arvore e: "<< arvore->tamanho <<endl;
-        }
-
-        if(op == 4){
-            cout<< "A altura da arvore e: "<< alturaArvore(arvore->raiz) <<endl;
-        }
-        if(op ==5){
-            break;
-        }
-            
-    
-    }
-
-
-    
-    
-    liberaArvore(arvore->raiz);
-    delete arvore;
-    
-    return 0;   
-}
-    
-
-
