@@ -1,112 +1,151 @@
-#include "interface.h"
+#include <iostream>
+#include <string>
+#include "interface.hpp"
 
-#ifdef _WIN32
-    #define SO 1
-#elif __linux__
-    #define SO 2
-#endif
-
-#define QTD_FUNCOES 5
-
-typedef void (*FuncaoPtr)(BST*);
-
-static void thisHome(BST* AV);
-static void sair(BST* AV);
-static void buscarFilme(BST* AV);
-static void informarAtributos(BST* AV);
-static void visualisarGrafo(BST* AV);
-static void removerFilme(BST* AV);
-static void clear();
-
+// Vetor de ponteiros para funções que representam as opções do menu
 FuncaoPtr F[] = {
-    &sair,
-    &buscarFilme,
-    &informarAtributos,
-    &visualisarGrafo,
-    &removerFilme
+	&sair,
+	&buscarFilme,
+	&informarAtributos,
+	&visualisarGrafo,
+	&removerFilme
 };
 
+// String que representa o menu de opções
 string home = 
-        "Escolha uma acao: \n"
-        "1 - Buscar filme.\n"
-        "2 - Informar atributos da arvore.\n"
-        "3 - Visualisar grafo.\n"
-        "4 - Remover filme.\n"
-        "0 - Sair.\n"
-        ">> ";
+		"Escolha uma ação: \n"
+		"1 - Buscar filme.\n"
+		"2 - Informar atributos da árvore.\n"
+		"3 - Visualisar grafo.\n"
+		"4 - Remover filme.\n"
+		"0 - Sair.\n"
+		">> ";
 
-void run(){
-    BST* AV = criaArvore();
-    leDados(AV, "dados.txt");
-    gerarGrafo(AV);
-    clear();
-    while(1) thisHome(AV);
+/**
+ * @brief Limpa a tela do terminal
+ */
+void clear() {
+	system(CLEAR_COMMAND);
 }
 
-void thisHome(BST* AV){
-    int entrada;
-    cout << home;
-    cin >> entrada;
-    if(entrada >= 0 && entrada <= QTD_FUNCOES){
-        F[entrada](AV);
-    }
-    cout << "Enter para continuar...";
-    cin.ignore();
-    cin.get();
-    clear();
+/**
+ * @brief Função principal do programa que lê os dados do arquivo
+ * 		  e inicia a interface
+ */
+void run() {
+	BST* arvore = criarArvore();
+	
+	lerDados(arvore, "dados.txt");
+	gerarGrafo(arvore);
+	clear();
+	
+	while (1) {
+		thisHome(arvore);
+	}
 }
 
-void sair(BST* AV){
-    liberaArvore(AV->raiz);
-    delete AV;
-    exit(0);
+/**
+ * @brief Exibe o menu e chama a função correspondente à opção escolhida
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void thisHome(BST* arvore) {
+	int entrada;
+	
+	cout << home;
+	cin >> entrada;
+	
+	if ((entrada >= 0) && (entrada <= QTD_FUNCOES)) {
+		F[entrada](arvore);
+	}
+	
+	cout << "Enter para continuar...";
+	cin.ignore();
+	cin.get();
+	clear();
 }
 
-void buscarFilme(BST* AV){
-    int entrada;
-    No* filme;
-    cout << "Qual o id do filme?\n>> ";
-    cin >> entrada;
-    filme = procuraNo(AV->raiz, entrada);
-    if(filme != NULL){
-        escreverFilmeEmArquivo(filme);
-        system("filme.txt");
-    } else {
-        cout << "Filme nao encontrado." <<endl;
-    }
-    cout << endl;
+/**
+ * @brief Apaga a árvore e sai do programa
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void sair(BST* arvore) {
+	liberarArvore(arvore->raiz);
+	delete arvore;
+	
+	exit(0);
 }
 
-void informarAtributos(BST* AV){
-    int tamanho;
-    int altura;
-    tamanho = AV->tamanho;
-    altura = alturaArvore(AV->raiz);
-    cout <<   "Tamanho da arvore: " << tamanho << " elementos.";
-    cout << "\nAltura da arvore: " << altura << " niveis.";
-    cout << "\n" << endl;
+/**
+ * @brief Busca um filme na árvore com base em um id
+ * 		  e escreve em um arquivo
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void buscarFilme(BST* arvore) {
+	int entrada;
+	No* filme;
+	
+	cout << "Qual o id do filme?\n>> ";
+	cin >> entrada;
+	
+	filme = procurarNo(arvore->raiz, entrada);
+	
+	if (filme != NULL) {
+		escreverFilmeEmArquivo(filme);
+		system("filme.txt");
+	} else {
+		cout << "Filme não encontrado." << "\n";
+	}
+
+	cout << "\n";
 }
 
-void visualisarGrafo(BST* AV){
-    gerarGrafo(AV);
-    cout << "Um tree.svg foi criado.\n\n";
-    system("tree.svg");
+/**
+ * @brief Informa o tamanho e a altura da árvore
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void informarAtributos(BST* arvore) {
+	int tamanho, altura;
+	
+	tamanho = arvore->tamanho;
+	altura = alturaArvore(arvore->raiz);
+	
+	cout << "Tamanho da árvore: " << tamanho << " elementos.";
+	cout << "\nAltura da árvore: " << altura << " niveis.";
+	cout << "\n" << "\n";
 }
 
-void removerFilme(BST* AV){
-    int entrada;
-    No* filme;
-    cout << "Qual o id do filme?\n>> ";
-    cin >> entrada;
-    filme = procuraNo(AV->raiz, entrada);
-    if(filme == NULL) cout << "Filme nao encontrado.\n" <<endl;
-    else {
-        AV->raiz = removeNo(entrada, AV->raiz, AV);
-        cout << "Filme removido." <<endl;
-    }
+/**
+ * @brief Gera um grafo da árvore
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void visualisarGrafo(BST* arvore) {
+	gerarGrafo(arvore);
+	cout << "O arquivo tree.svg foi criado.\n\n";
 }
 
-static void clear(){
-    if(SO == 1) system("cls");
-    else if(SO == 2) system("clear");
+/**
+ * @brief Remove um filme da árvore com base no id
+ * 
+ * @param arvore Ponteiro para a árvore
+ */
+void removerFilme(BST* arvore) {
+	int entrada;
+	No* filme;
+	
+	cout << "Qual o id do filme?\n>> ";
+	cin >> entrada;
+	
+	filme = procurarNo(arvore->raiz, entrada);
+	
+	if (filme == NULL) {
+		cout << "Filme não encontrado.\n" << "\n";
+	} else {
+		arvore->raiz = removerNo(entrada, arvore->raiz, arvore);
+		cout << "Filme removido." << "\n";
+	}
 }

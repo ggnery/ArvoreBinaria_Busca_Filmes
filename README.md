@@ -1,7 +1,22 @@
-# Como executar o codigo?
-* Instale o graphviz e adicione ao path - https://www.graphviz.org/download/
-* Baixe dados.txt ou teste.txt (dados.txt está definido como default na leitura de arquivo)
-* baixe main.cpp AVL.cpp interface.cpp AVL.h interface.h
-* Abra o terminal e execute "g++ main.cpp interface.cpp AVL.cpp -o main"
-* Digite ./main.exe no terminal
-* O programa será rodado
+# Trabalho de AED2 - Árvore AVL
+Essa é uma implementação de uma BST (Binary Search Tree) com balanceamento AVL (Adelson-Velskii e Landis) em C++.
+
+Nós escolhemos o caso de uso de um sistema de vizualização de filmes, podendo ver informações sobre um dado filme a partir de um id.
+
+Nós implementamos também uma biblioteca gráfica para visualizar a árvore.
+
+## Como usar a biblioteca gráfica?
+1) Instale o [graphviz](https://www.graphviz.org/download/) e adicione ao path
+2) Execute o programa
+3) Um arquivo svg será gerado com a árvore completa
+
+## Como usar o programa?
+1) Compile o programa
+```bash
+g++ AVL.cpp functionsAVL.cpp -o main
+```
+2) Execute o programa
+```bash
+./main 	 # Linux
+main.exe # Windows
+```
