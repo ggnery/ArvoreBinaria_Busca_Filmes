@@ -13,7 +13,7 @@ Nós implementamos também uma biblioteca gráfica para visualizar a árvore.
 ## Como usar o programa?
 1) Compile o programa
 ```bash
-g++ AVL.cpp functionsAVL.cpp -o main
+g++ main.cpp functionsAVL.cpp interface.cpp -o main
 ```
 2) Execute o programa
 ```bash

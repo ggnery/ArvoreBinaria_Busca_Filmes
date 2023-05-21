@@ -347,7 +347,7 @@ No* removerNo(int id, No* raiz, BST* arvore) {
  * @param id id do filme a ser procurado
  * @return No* - Ponteiro para o nó com o 'id' informado (se existir)
  */
-No* procurarNo(No* raiz, int id){
+No* procurarNo(No* raiz, int id) {
 	No* aux = raiz;
 	
 	while (aux) {
@@ -383,6 +383,11 @@ void liberarArvore(No* raiz) {
  * @param arvore Ponteiro para a árvore 
  */
 void gerarGrafo(BST* arvore) {
+	if (arvore == nullptr) {
+		cout << "Erro ao gerar grafo: árvore não alocada" << "\n";
+		return;
+	}
+
 	ofstream file("tree.dot");
 
 	file << "digraph BST {" << "\n";
@@ -432,7 +437,7 @@ void lerDados(BST* arvore, string arquivoTXT) {
 	ifstream arquivo(arquivoTXT);
 	
 	if (!arquivo.is_open()) {
-		cout << "Erro ao abrir o arquivo." << "\n";
+		cout << "\033[1;31mErro ao abrir o arquivo\033[m\n";
 		exit(1);
 	}
 
@@ -467,9 +472,9 @@ void escreverFilmeEmArquivo(No* no) {
 		arquivo << "Popularidade: " << no->filme.popularidade << "\n";
 		arquivo << "Descrição: " << no->filme.descricao << "\n";
 		arquivo.close();
-		cout << "Informações do filme foram gravadas no arquivo 'filme.txt'." << "\n";
+		cout << "\033[1;32mInformações do filme foram gravadas no arquivo 'filme.txt'\033[m\n";
 	} else {
-		cout << "Erro ao abrir o arquivo." << "\n";
+		cout << "\033[1;31mErro ao abrir o arquivo\n";
 	}
 
 	arquivo.close();

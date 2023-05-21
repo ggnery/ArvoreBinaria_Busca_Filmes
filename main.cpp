@@ -2,7 +2,7 @@
 #include "interface.hpp"
 
 int main() {
-    run();
-    
-    return 0;
+	run();
+	
+	return 0;
 }

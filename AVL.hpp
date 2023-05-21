@@ -8,26 +8,26 @@ using namespace std;
 
 // Struct para armazenar os dados de um filme e definição do tipo Filme
 typedef struct filme {
-    int id;
-    string nome;
-    string linguagem;
-    string popularidade;
-    string lancamento;
-    string descricao;
+	int id;
+	string nome;
+	string linguagem;
+	string popularidade;
+	string lancamento;
+	string descricao;
 } Filme;
 
 // Struct para armazenar os dados de um nó da árvore e definição do tipo No
 typedef struct no {
-    Filme filme;
-    int altura;
-    struct no* direita;
-    struct no* esquerda;
+	Filme filme;
+	int altura;
+	struct no* direita;
+	struct no* esquerda;
 } No;
 
 // Struct para armazenar os dados da árvore e definição do tipo BST
 typedef struct bst {
-    No* raiz;
-    int tamanho;
+	No* raiz;
+	int tamanho;
 } BST;
 
 // Declaração das funções

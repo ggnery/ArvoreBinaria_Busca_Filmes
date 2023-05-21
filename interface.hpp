@@ -6,12 +6,12 @@
 
 // Macros
 #ifdef _WIN32
-    #define CLEAR_COMMAND "cls"
+	#define CLEAR_COMMAND "cls"
 #elif __linux__
-    #define CLEAR_COMMAND "clear"
+	#define CLEAR_COMMAND "clear"
 #endif
 
-#define QTD_FUNCOES 5
+#define QTD_FUNCOES 7
 
 using namespace std;
 
@@ -23,9 +23,11 @@ void clear();
 void run();
 void thisHome(BST* arvore);
 void sair(BST* arvore);
+void adicionarFilme(BST* arvore);
+void removerFilme(BST* arvore);
 void buscarFilme(BST* arvore);
 void informarAtributos(BST* arvore);
-void visualisarGrafo(BST* arvore);
-void removerFilme(BST* arvore);
+void visualizarGrafo(BST* arvore);
+void carregarArquivo(BST* arvore);
 
 #endif // INTERFACE_H_INCLUDED
